@@ -38,6 +38,7 @@ class OurClassifier extends ChangeNotifier {
         //   options: InterpreterOptions()..useNnApiForAndroid = true,
         // );
         interpreter = await Interpreter.fromAsset('models/model.tflite');
+        // interpreter = await Interpreter.fromAsset('models/ResNet152V2_2.h5');
         // isolateInterpreter =
         //     await isolateInterpreter.create(address: interpreter.address);
 
