@@ -14,7 +14,7 @@ class OurClassifier extends ChangeNotifier {
   bool classifying = false;
   bool initialised = false;
   bool error = false;
-  List<String> labels = ["counterfeit", "Genuine"];
+  List<String> labels = ["Counterfeit", "Genuine"];
   List<File> _selectedImages = [];
   // List<File> _copySelectedImages = [];
   List<int> changed = [];
@@ -53,11 +53,13 @@ class OurClassifier extends ChangeNotifier {
   }
 
   Future<void> classifyImages(List<File> imgListFile) async {
+    classifying = true;
+    notifyListeners();
     classification = [];
     print("classfy started");
     _selectedImages = imgListFile;
     // _copySelectedImages = imgListFile;
-    classifying = true;
+
     if (!initialised) {
       print("Not initialesd");
       await initialise();
@@ -76,18 +78,52 @@ class OurClassifier extends ChangeNotifier {
         print("Classifying");
 
         await classify(normalizedImage, outputTensors, i);
-        print("Classified");
         notifyListeners();
       } catch (e) {
         print(e);
         classification = List.filled(_selectedImages.length, "Model Error");
 
-        notifyListeners();
-        return;
+        break;
       }
       // }
     }
     classifying = false;
+  }
+
+  Future<void> reclassifyImage({required int index}) async {
+    classifying = true;
+    notifyListeners();
+
+    classification[index] = "Re-Classifiying";
+    print("Image Re-Classifiying");
+
+    if (!initialised) {
+      print("Not initialesd");
+      await initialise();
+    }
+    List<List<double>> outputTensors = [
+      [0.0, 0.0]
+    ];
+    TensorImage normalizedImage = await _preProcessInput(index);
+
+    print("normalised");
+
+    try {
+      print("Classifying");
+
+      await classify(normalizedImage, outputTensors, index);
+      classification.removeAt(index + 1);
+      notifyListeners();
+    } catch (e) {
+      print(e);
+      classification[index] = "Model Error";
+
+      return;
+    }
+    classifying = false;
+    notifyListeners();
+
+    // }
   }
 
   // Future<Float32List> preprocessImage(int i) async {
@@ -160,10 +196,13 @@ class OurClassifier extends ChangeNotifier {
     var maxIndex = output
         .indexOf(output.reduce((curr, next) => curr > next ? curr : next));
     // // _copySelectedImages[i] = _selectedImages[i];
+
+    print("${labels[maxIndex]} ${output[maxIndex] * 100} at ${i + 1}");
+
     classification.insert(
-        i, "${labels[maxIndex]} by ${output[maxIndex] * 100} at ${i + 1}");
-    print(output);
-    print(maxIndex);
+        i, "${labels[maxIndex]} ${output[maxIndex] * 100} at ${i + 1}");
+    // print(output);
+    // print(maxIndex);
   }
 
   @override
@@ -187,7 +226,7 @@ class OurClassifier extends ChangeNotifier {
     final inputTensor = TensorImage(tfl_P.TfLiteType.float32);
 
     inputTensor.loadImage(image!);
-    print(inputTensor);
+    // print(inputTensor);
 
     // #2
 // Assuming inputTensor is of type TensorImage or similar

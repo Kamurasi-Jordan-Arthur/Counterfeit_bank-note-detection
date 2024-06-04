@@ -41,7 +41,8 @@ class MyCamera extends ChangeNotifier {
   Future<void> toggleflash() async {
     flashon = !flashon;
     if (flashon) {
-      await controller.setFlashMode(FlashMode.always);
+      await controller.setFlashMode(FlashMode
+          .always); // for some devices this means that the touch can be off
       notifyListeners();
       return;
     }
@@ -56,11 +57,14 @@ class MyCamera extends ChangeNotifier {
       takingpic = true;
       notifyListeners();
       final tempimage = await controller.takePicture();
+
       saveToDevice(tempimage.path);
+      print(tempimage.path);
       // just_taken = true;
 
-      notifyListeners();
       takingpic = false;
+      notifyListeners();
+      // takingpic = false;
     }
   }
 

@@ -92,7 +92,7 @@ class _MycamerapreviewState extends State<Mycamerapreview> {
                           Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Text(
+                              const Text(
                                 "Gallery",
                                 style: TextStyle(
                                   color: Colors.white,
@@ -134,7 +134,7 @@ class _MycamerapreviewState extends State<Mycamerapreview> {
                           Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Text(
+                              const Text(
                                 "Photo",
                                 style: TextStyle(
                                   color: Colors.white,
@@ -161,7 +161,7 @@ class _MycamerapreviewState extends State<Mycamerapreview> {
                           Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Text(
+                              const Text(
                                 "Flash",
                                 style: TextStyle(
                                   color: Colors.white,
