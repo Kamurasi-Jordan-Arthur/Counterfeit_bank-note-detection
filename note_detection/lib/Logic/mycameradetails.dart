@@ -1,4 +1,6 @@
 import 'dart:io';
+// import 'dart:ui';
+import 'package:flutter/cupertino.dart';
 import 'package:path/path.dart' as p;
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +20,7 @@ class MyCamera extends ChangeNotifier {
   double maxzoom = 0;
   double minzoom = 0.5;
   bool focusing = false;
+  Offset? focuspoint = null;
 
   bool flashon = false;
 
@@ -42,12 +45,13 @@ class MyCamera extends ChangeNotifier {
     flashon = !flashon;
     if (flashon) {
       await controller.setFlashMode(FlashMode
-          .always); // for some devices this means that the touch can be off
+          .torch); // for some devices this means that the touch can be off
+      // await controller.takePicture();
       notifyListeners();
       return;
     }
     await controller.setFlashMode(FlashMode.off);
-
+    // await controller.takePicture();
     notifyListeners();
   }
 
@@ -56,6 +60,7 @@ class MyCamera extends ChangeNotifier {
       print("taking pic");
       takingpic = true;
       notifyListeners();
+
       final tempimage = await controller.takePicture();
 
       saveToDevice(tempimage.path);
@@ -94,25 +99,40 @@ class MyCamera extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> setFocuspoint(Offset relativeposition) async {
-    Offset myoffset = Offset(
-      relativeposition.dx.clamp(0.0, 1),
-      relativeposition.dy.clamp(0.0, 1),
+  Future<void> setFocuspoint(
+    Offset localposition,
+    BoxConstraints constraints,
+  ) async {
+    // await controller.setFocusMode(FocusMode.auto);
+    // await controller.setExposureMode(ExposureMode.auto);
+    Offset relativeposition = Offset(
+      localposition.dx / constraints.maxWidth,
+      localposition.dy / constraints.maxHeight,
     );
     try {
-      await controller.setFocusPoint(myoffset);
       focusing = true;
+      print("Focusing");
+
+      focuspoint = Offset(
+          relativeposition.dx.clamp(0, 1), relativeposition.dy.clamp(0, 1));
+
+      await controller.setFocusPoint(focuspoint);
+      await controller.setFocusMode(FocusMode.auto);
+
       notifyListeners();
-      Future.delayed(
+      await Future.delayed(
         const Duration(
           seconds: 3,
         ),
       );
-      await controller.setFocusPoint(null);
+
       focusing = false;
+      focuspoint = null;
+
       notifyListeners();
+      print("Focusing Ended");
     } catch (e) {
-      print(e);
+      print("Failed to set focus");
     }
   }
 
@@ -124,6 +144,8 @@ class MyCamera extends ChangeNotifier {
       minzoom = await controller.getMinZoomLevel();
       maxzoom = await controller.getMinZoomLevel();
       await controller.setFlashMode(FlashMode.off);
+      // await controller.setExposureMode(ExposureMode.auto);
+      // await controller.setFocusMode(FocusMode.auto);
       initialised = true;
 
       notifyListeners();

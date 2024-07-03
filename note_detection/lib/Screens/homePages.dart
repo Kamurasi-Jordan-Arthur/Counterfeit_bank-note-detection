@@ -150,8 +150,18 @@ class WorkPage extends StatelessWidget {
           children: <Widget>[
             BoxElement(
               selectfrom: const MyChoiceWidget(choice: "camera"),
-              ontap: () {
-                Navigator.pushNamed(context, "/camera");
+              ontap: () async {
+                // Navigator.pushNamed(context, "/camera");  // from in buit camera
+                List<File> selected = await Myimagepicker.takeImageSnap();
+                if (selected.isNotEmpty) {
+                  Navigator.pushNamed(
+                    context,
+                    "/browser",
+                    arguments: {
+                      "selectedImageFiles": selected,
+                    },
+                  );
+                }
               },
             ),
             BoxElement(

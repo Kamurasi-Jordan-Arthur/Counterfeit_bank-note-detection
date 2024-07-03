@@ -13,4 +13,9 @@ class Myimagepicker extends ChangeNotifier {
     }
     return images.map((e) => File(e.path)).toList();
   }
+
+  static Future<List<File>> takeImageSnap() async {
+    XFile? image = await picker.pickImage(source: ImageSource.camera);
+    return [if (image != null) File(image.path)];
+  }
 }

@@ -136,7 +136,8 @@ class _AppBriefState extends State<AppBrief> {
                 TextButton(
                   onPressed: () {
                     (currentpage == 7)
-                        ? Navigator.pushNamed(context, "/")
+                        // ? Navigator.pushNamed(context, "/")
+                        ? Navigator.pop(context)
                         : _pageController.nextPage(
                             duration: const Duration(microseconds: 500),
                             curve: Curves.easeIn);

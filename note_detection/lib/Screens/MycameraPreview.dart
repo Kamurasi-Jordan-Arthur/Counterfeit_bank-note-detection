@@ -38,13 +38,21 @@ class _MycamerapreviewState extends State<Mycamerapreview> {
             body: LayoutBuilder(
                 builder: (BuildContext context, BoxConstraints constraints) {
               return Stack(
+                fit: StackFit.expand,
                 children: [
                   Positioned.fill(
                     child: AspectRatio(
                       aspectRatio:
                           context.read<MyCamera>().controller.value.aspectRatio,
-                      child: CameraPreview(
-                        context.read<MyCamera>().controller,
+                      child: GestureDetector(
+                        onTapDown: (details) =>
+                            context.read<MyCamera>().focusing
+                                ? null
+                                : context.read<MyCamera>().setFocuspoint(
+                                    details.localPosition, constraints),
+                        child: CameraPreview(
+                          context.read<MyCamera>().controller,
+                        ),
                       ),
                     ),
                   ),
@@ -68,6 +76,28 @@ class _MycamerapreviewState extends State<Mycamerapreview> {
                       ),
                     ),
                   ),
+
+                  (context.watch<MyCamera>().focuspoint != null)
+                      ? Positioned.fill(
+                          top: 50,
+                          child: Align(
+                            alignment: Alignment(
+                                context.watch<MyCamera>().focuspoint!.dx * 2 -
+                                    1,
+                                context.watch<MyCamera>().focuspoint!.dy * 2 -
+                                    1),
+                            child: Container(
+                              height: 80,
+                              width: 80,
+                              decoration: BoxDecoration(
+                                border:
+                                    Border.all(color: Colors.white, width: 2),
+                              ), // BoxDecoration
+                            ), // Container
+                          ), // Align
+                        )
+                      : Container(), // Positioned.fill
+
                   Positioned(
                     left: 0,
                     right: 0,
