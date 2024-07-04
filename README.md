@@ -13,8 +13,8 @@ The Bank Note Checker is a mobile application designed to detect counterfeit ban
 
 1. **Clone the Repository**
    ```bash
-   git clone https://github.com/yourusername/banknote-checker.git
-   cd banknote-checker
+   git clone git@github.com:Kamurasi-Jordan-Arthur/Counterfeit_bank-note-detection.git
+   cd note_detection
    ```
 
 2. **Set Up the Environment**
