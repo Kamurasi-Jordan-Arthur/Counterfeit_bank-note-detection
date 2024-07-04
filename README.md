@@ -1,7 +1,3 @@
-Here's the revised README.md file:
-
----
-
 # Bank Note Checker
 
 ## Overview
@@ -33,20 +29,11 @@ The Bank Note Checker is a mobile application designed to detect counterfeit ban
      ```bash
      flutter run
      ```
-
-## Technology Stack
-- **Flutter & Dart:** For cross-platform mobile app development.
-- **TensorFlow Lite:** For deploying the machine learning model on mobile devices.
-
 ## Model Integration
 The ResNet152V2 model has been converted to TensorFlow Lite (TFLite) for mobile optimization. Note that the model file is not included in this repository due to its large size. You can download the TFLite model from [this link](#) and place it in the appropriate directory.
 
 ## System Architecture
-The application follows a client-server architecture where the client (mobile app) interacts with the TFLite model for real-time counterfeit detection.
-
-## License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-Replace placeholder text like `path/to/splash_screen.png` with actual paths to your images and `https://github.com/yourusername/banknote-checker.git` with your actual GitHub repository URL. Update the model download link if you have a specific location where the TFLite model can be downloaded.
+The application follows a layered architecture:
+- **Frontend:** Built using Flutter, it handles user interactions and displays results.
+- **Logic Layer:** Contains the business logic for processing the images and interfacing with the model.
+- **Data Layer:** Manages data storage, retrieval, and preprocessing required for model inference.
